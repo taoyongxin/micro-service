@@ -1,5 +1,5 @@
 server:
-  port: 8003
+  port: 8011
 spring:
   application:
     name: user-center
@@ -9,3 +9,17 @@ spring:
       username: root
       password: abc.123
       driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    nacos:
+      discovery:
+        # 指定nacos server的地址
+        server-addr: 123.56.164.214:8848
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
