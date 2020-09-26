@@ -1,10 +1,11 @@
 server:
-  port: 8002
+  port: 8015
 spring:
   application:
     name: content-center
   datasource:
-    url: jdbc:mysql://123.56.164.214:3306/content_center
+    url: jdbc:mysql://123.56.164.214:3306/course_center
+#    url: jdbc:mysql://123.56.164.214:3306/content_center
     hikari:
       username: root
       password: abc.123
@@ -14,6 +15,8 @@ spring:
       discovery:
         # 指定nacos server的地址
         server-addr: 123.56.164.214:8848
+        # 指定名称空间地址
+        namespace: f0353fde-6d84-405c-a435-392c99fb9254
 
 management:
   endpoints:
@@ -23,3 +26,14 @@ management:
   endpoint:
     health:
       show-details: always
+
+## 基于配置的方法（随机策略）
+#user-center:
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
+# 饥饿加载（提升首次加载的性能）
+ribbon:
+  eager-load:
+    enabled: true
+    clients: user-center

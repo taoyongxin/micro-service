@@ -1,5 +1,5 @@
 server:
-  port: 8011
+  port: 8012
 spring:
   application:
     name: user-center
@@ -14,6 +14,10 @@ spring:
       discovery:
         # 指定nacos server的地址
         server-addr: 123.56.164.214:8848
+        metadata:  #配置Nacos的元数据
+          instance: cc
+          version: 1.0
+        namespace: f0353fde-6d84-405c-a435-392c99fb9254
 
 management:
   endpoints:
