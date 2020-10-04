@@ -1,23 +1,30 @@
 server:
-  port: 8012
+  port: 0
 spring:
   application:
     name: user-center
   datasource:
-    url: jdbc:mysql://123.56.164.214:3306/user_center
+#    url: jdbc:mysql://123.56.164.214:3306/user_center
+    url: jdbc:mysql://47.96.8.29:3306/user_center
     hikari:
       username: root
       password: abc.123
       driver-class-name: com.mysql.cj.jdbc.Driver
+      minimum-idle: 10
+      maximum-pool-size: 1800000
+      idle-timeout: 600000
+      connection-timeout: 30000
   cloud:
     nacos:
       discovery:
         # 指定nacos server的地址
-        server-addr: 123.56.164.214:8848
+        server-addr: 47.96.8.29:8848
+#        server-addr: 123.56.164.214:8848
+
         metadata:  #配置Nacos的元数据
           instance: cc
           version: 1.0
-        namespace: f0353fde-6d84-405c-a435-392c99fb9254
+#        namespace: f0353fde-6d84-405c-a435-392c99fb9254
 
 management:
   endpoints:

@@ -1,5 +1,8 @@
 package com.soft1851.contentcenter;
 
+import com.soft1851.contentcenter.domain.dto.UserDto;
+import com.soft1851.contentcenter.feignclient.TestBaiduFeignClient;
+import com.soft1851.contentcenter.feignclient.TestUserCenterFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -27,6 +30,9 @@ public class TestController {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private TestUserCenterFeignClient testUserCenterFeignClient;
 
 
     /**
@@ -60,6 +66,18 @@ public class TestController {
     @GetMapping(value = "/call/ribbon")
     public String callByRibbon() {
         return restTemplate.getForObject("http://user-center/user/hello", String.class);
+    }
+
+    @GetMapping(value = "/test-q")
+    public UserDto query(UserDto userDto){
+        return testUserCenterFeignClient.query(userDto);
+    }
+
+    @Autowired
+    private TestBaiduFeignClient testBaiduFeignClient;
+    @GetMapping(value = "/baidu")
+    public String baiduIndex(){
+        return this.testBaiduFeignClient.index();
     }
 
 }

@@ -1,11 +1,6 @@
 package com.soft1851.usercenter.service;
 
-import com.soft1851.usercenter.dao.UserMapper;
-import com.soft1851.usercenter.domain.dto.UserDto;
 import com.soft1851.usercenter.domain.entity.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * @author Tao
@@ -14,18 +9,26 @@ import org.springframework.stereotype.Service;
  * @Description TODO
  * @date 2020-09-24 20:23
  **/
-@Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class UserService {
 
-    private final UserMapper userMapper;
+public interface UserService {
+//
+//    private final UserMapper userMapper;
+//
+//    public UserDto getUserDto(int id){
+//        User user = userMapper.selectByPrimaryKey(id);
+//        UserDto userDto = new UserDto();
+//        userDto.setId(user.getId());
+//        userDto.setWxId(user.getWxId());
+//        userDto.setWxNickname(user.getWxNickname());
+//        userDto.setAvatarUrl(user.getAvatarUrl());
+//        userDto.setBonus(user.getBonus());
+//        return userDto;
+//    }
 
-    public UserDto getUserDto(int id){
-        User user = userMapper.selectByPrimaryKey(id);
-        UserDto userDto = new UserDto();
-        userDto.setId(user.getId());
-        userDto.setUserName(user.getUserName());
-        userDto.setAvatarUrl(user.getAvatarUrl());
-        return userDto;
-    }
+    /**
+     * 根据用户id查询用户数据
+     * @param id
+     * @return
+     */
+    User findById(Integer id);
 }

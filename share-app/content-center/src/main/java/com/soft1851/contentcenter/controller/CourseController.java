@@ -1,9 +1,5 @@
 package com.soft1851.contentcenter.controller;
 
-import com.soft1851.contentcenter.common.ResponseResult;
-import com.soft1851.contentcenter.domain.dto.CourseDto;
-import com.soft1851.contentcenter.domain.dto.UserDto;
-import com.soft1851.contentcenter.domain.entity.Course;
 import com.soft1851.contentcenter.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,18 +40,18 @@ public class CourseController {
     }
 
 
-    @GetMapping(value = "/all")
-    public ResponseResult getAll(){
-        List<Course> courses = courseService.findAll();
-        List<CourseDto> courseDtoList = new ArrayList<>();
-        courses.forEach(course -> {
-            int userId = course.getUserId();
-            UserDto userDto = restTemplate.getForObject("http://user-center/user/{id}", UserDto.class,userId);
-            assert userDto != null;
-            CourseDto courseDto = CourseDto.builder().course(course).userName(userDto.getUserName()).avatarUrl(userDto.getAvatarUrl()).build();
-            courseDtoList.add(courseDto);
-        });
-        return new ResponseResult(200,"请求成功",courseDtoList);
-    }
+//    @GetMapping(value = "/all")
+//    public ResponseResult getAll(){
+//        List<Course> courses = courseService.findAll();
+//        List<CourseDto> courseDtoList = new ArrayList<>();
+//        courses.forEach(course -> {
+//            int userId = course.getUserId();
+//            UserDto userDto = restTemplate.getForObject("http://user-center/user/{id}", UserDto.class,userId);
+//            assert userDto != null;
+//            CourseDto courseDto = CourseDto.builder().course(course).userName(userDto.getUserName()).avatarUrl(userDto.getAvatarUrl()).build();
+//            courseDtoList.add(courseDto);
+//        });
+//        return new ResponseResult(200,"请求成功",courseDtoList);
+//    }
 
 }

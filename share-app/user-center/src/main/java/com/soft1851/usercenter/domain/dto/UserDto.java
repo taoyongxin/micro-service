@@ -18,6 +18,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserDto {
     private Integer id;
-    private String userName;
+    private String wxId;
+    private String wxNickname;
     private String avatarUrl;
+    private Integer bonus;
 }

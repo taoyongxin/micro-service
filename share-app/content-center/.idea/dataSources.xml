@@ -7,5 +7,17 @@
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://123.56.164.214:3306/</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="aliyun-zhaoyujie" uuid="dd29e1a0-14c7-42ea-a7df-c5a61dda8ae1">
+      <driver-ref>mysql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://47.97.103.220:3306</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="aliyun-tao-2g" uuid="4fb18f01-c059-459d-86c1-06bd86a24411">
+      <driver-ref>mysql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://47.96.8.29:3306</jdbc-url>
+    </data-source>
   </component>
 </project>

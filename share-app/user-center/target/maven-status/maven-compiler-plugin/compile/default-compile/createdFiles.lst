@@ -1,1 +1,11 @@
+com\soft1851\usercenter\domain\entity\User$UserBuilder.class
+com\soft1851\usercenter\domain\entity\User.class
+com\soft1851\usercenter\dao\UserMapper.class
+com\soft1851\usercenter\controller\UserHello.class
+com\soft1851\usercenter\domain\dto\UserDto$UserDtoBuilder.class
+com\soft1851\usercenter\TestController.class
 com\soft1851\usercenter\UserCenterApplication.class
+com\soft1851\usercenter\controller\UserController.class
+com\soft1851\usercenter\service\UserService.class
+com\soft1851\usercenter\domain\dto\UserDto.class
+com\soft1851\usercenter\service\impl\UserServiceImpl.class

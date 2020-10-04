@@ -13,7 +13,7 @@ class UserMapperTest {
 
     @Test
     void get() {
-        User user = userMapper.selectByPrimaryKey(2);
+        User user = userMapper.selectByPrimaryKey(1);
         System.out.println(user);
     }
 }

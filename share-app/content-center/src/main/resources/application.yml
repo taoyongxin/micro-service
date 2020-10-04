@@ -3,20 +3,28 @@ server:
 spring:
   application:
     name: content-center
+  main:
+    allow-bean-definition-overriding: true
   datasource:
-    url: jdbc:mysql://123.56.164.214:3306/course_center
 #    url: jdbc:mysql://123.56.164.214:3306/content_center
+    url: jdbc:mysql://47.96.8.29:3306/content_center?serverTimezone=Asia/Shanghai&characterEncoding=utf-8
     hikari:
       username: root
       password: abc.123
       driver-class-name: com.mysql.cj.jdbc.Driver
+      minimum-idle: 10
+      maximum-pool-size: 1800000
+      idle-timeout: 600000
+      connection-timeout: 30000
   cloud:
     nacos:
       discovery:
         # 指定nacos server的地址
-        server-addr: 123.56.164.214:8848
+        server-addr: 47.96.8.29:8848
+#        server-addr: 123.56.164.214:8848
+
         # 指定名称空间地址
-        namespace: f0353fde-6d84-405c-a435-392c99fb9254
+#        namespace: f0353fde-6d84-405c-a435-392c99fb9254
 
 management:
   endpoints:
@@ -27,13 +35,40 @@ management:
     health:
       show-details: always
 
-## 基于配置的方法（随机策略）
-#user-center:
-#  ribbon:
-#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+# 基于配置的方法（随机策略）
+user-center:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
 
 # 饥饿加载（提升首次加载的性能）
 ribbon:
   eager-load:
     enabled: true
     clients: user-center
+
+## SpringBoot配置日志的方式
+#logging:
+#  level:
+#    com.soft1851: debug
+
+# feign配置日志
+logging:
+  level:
+    # feign的日志系统是建立在SpringBoot基础上的，此处一定要是debug，否则都不会打印
+    com.soft1851.contentcenter.feignclient.UserCenterFeignClient: debug
+
+## feign细粒度配置（配置文件的方法配置日志）
+#feign:
+#  client:
+#    config:
+#      #想要调用的微服务名称
+#      user-center:
+#        loggerLevel: full
+
+## feign细粒度配置
+#feign:
+#  client:
+#    config:
+#      #全局配置
+#      default:
+#        loggerLevel: full
