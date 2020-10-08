@@ -1,5 +1,6 @@
 package com.soft1851.contentcenter.controller;
 
+import com.soft1851.contentcenter.domain.dto.ContributeDto;
 import com.soft1851.contentcenter.domain.dto.ShareDto;
 import com.soft1851.contentcenter.domain.entity.Share;
 import com.soft1851.contentcenter.service.ShareService;
@@ -80,5 +81,11 @@ public class ShareController {
             pageSize = 100;
         }
         return this.shareService.query(title,pageNo,pageSize,userId).getList();
+    }
+
+    @PostMapping(value = "/insert")
+    @ApiOperation(value = "投稿",notes = "用户投稿")
+    public int insertShare(@RequestBody ContributeDto contributeDto){
+        return this.shareService.insertShare(contributeDto);
     }
 }

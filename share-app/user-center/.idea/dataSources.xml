@@ -13,5 +13,11 @@
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://47.97.103.220:3306</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="aliyun-tao-2g" uuid="28127f83-2889-485b-b7c5-dbd22523337e">
+      <driver-ref>mysql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://47.96.8.29:3306</jdbc-url>
+    </data-source>
   </component>
 </project>

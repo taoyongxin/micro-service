@@ -1,6 +1,8 @@
 package com.soft1851.contentcenter.service;
 
 import com.github.pagehelper.PageInfo;
+import com.soft1851.contentcenter.domain.dto.ContributeDto;
+import com.soft1851.contentcenter.domain.dto.ShareAuditDto;
 import com.soft1851.contentcenter.domain.dto.ShareDto;
 import com.soft1851.contentcenter.domain.entity.Share;
 import org.junit.jupiter.api.Test;
@@ -8,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 import java.util.List;
+
+import static com.soft1851.contentcenter.domain.enums.AuditStatusEnum.PASS;
 
 @SpringBootTest
 class ShareServiceTest {
@@ -28,9 +32,37 @@ class ShareServiceTest {
         list.forEach(item-> System.out.println(item.getTitle()+","+item.getDownloadUrl()));
     }
 
-//    @Test
-//    void findAll() {
-//        List<ShareDto> shareDtoList = shareService.findAll();
-//        System.out.println(shareDtoList);
-//    }
+    @Test
+    void insertShare() {
+        ContributeDto contributeDto = ContributeDto.builder()
+                .userId(1)
+                .title("今天星期四")
+                .isOriginal(true)
+                .author("李白")
+                .cover("tangshi.jpg")
+                .summary("天气晴，心情好！")
+                .price(20)
+                .downloadUrl("www.tssbs.com")
+                .build();
+        shareService.insertShare(contributeDto);
+    }
+
+    @Test
+    void auditById() {
+        ShareAuditDto shareAuditDto = ShareAuditDto.builder()
+                .auditStatusEnum(PASS)
+                .reason("通过")
+                .build();
+
+        shareService.auditById(16,shareAuditDto);
+    }
+
+    @Test
+    void auditByIdSyn() {
+        ShareAuditDto shareAuditDto = ShareAuditDto.builder()
+                .auditStatusEnum(PASS)
+                .reason("通过")
+                .build();
+        shareService.auditByIdSyn(17,shareAuditDto);
+    }
 }

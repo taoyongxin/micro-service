@@ -20,12 +20,17 @@ spring:
     nacos:
       discovery:
         # 指定nacos server的地址
-        server-addr: 47.96.8.29:8848
-#        server-addr: 123.56.164.214:8848
+#        server-addr: 47.96.8.29:8848
+        server-addr: localhost:8848
 
         # 指定名称空间地址
 #        namespace: f0353fde-6d84-405c-a435-392c99fb9254
+    sentinel:
+      transport:
+        # 指定sentinel控制台地址
+        dashboard: localhost:8080
 
+# Spring Boot监控
 management:
   endpoints:
     web:
@@ -72,3 +77,9 @@ logging:
 #      #全局配置
 #      default:
 #        loggerLevel: full
+
+rocketmq:
+  name-server: 47.96.8.29:9876
+  producer:
+    # 必须指定group
+    group: test-group
