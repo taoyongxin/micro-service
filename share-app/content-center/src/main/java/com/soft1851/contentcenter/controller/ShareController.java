@@ -7,8 +7,12 @@ import com.soft1851.contentcenter.service.ShareService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.AsyncRestTemplate;
 
 import java.util.List;
 
@@ -19,6 +23,7 @@ import java.util.List;
  * @Description TODO
  * @date 2020-09-29 16:40
  **/
+@Slf4j
 @RestController
 @RequestMapping(value = "/shares")
 @Api(tags = "分享接口", value = "提供分享相关的Rest API")
@@ -88,4 +93,16 @@ public class ShareController {
     public int insertShare(@RequestBody ContributeDto contributeDto){
         return this.shareService.insertShare(contributeDto);
     }
+
+    private final AsyncRestTemplate asyncRestTemplate;
+    @GetMapping(value = "/sayHelloAys")
+    public String sayHelloAys() {
+        //异步发送
+        ListenableFuture<ResponseEntity<String>> entity = asyncRestTemplate.getForEntity("http://user-center/user/hello", String.class);
+        entity.addCallback(result -> log.info(result.getBody()), (e) -> log.error(e.getMessage()));
+        return entity.toString();
+    }
+
+
+
 }
