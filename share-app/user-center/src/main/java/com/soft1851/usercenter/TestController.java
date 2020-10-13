@@ -26,10 +26,11 @@ public class TestController {
 
     /**
      * 测试：服务发现，证明内容中心总能找到用户中心
+     *
      * @return
      */
     @GetMapping("/discovery")
-    public List<ServiceInstance> getInstances(){
+    public List<ServiceInstance> getInstances() {
         return this.discoveryClient.getInstances("user-center");
     }
 }

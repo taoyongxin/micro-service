@@ -1,0 +1,6 @@
+com\soft1851\contentcenter\service\ShareServiceTest.class
+com\soft1851\contentcenter\dao\NoticeMapperTest.class
+com\soft1851\contentcenter\dao\CourseMapperTest.class
+com\soft1851\contentcenter\dao\ShareMapperTest.class
+com\soft1851\contentcenter\service\NoticeServiceTest.class
+com\soft1851\contentcenter\service\SentinelTest.class

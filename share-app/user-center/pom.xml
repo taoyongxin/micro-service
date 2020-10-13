@@ -71,6 +71,13 @@
             <artifactId>rocketmq-spring-boot-starter</artifactId>
             <version>2.1.1</version>
         </dependency>
+
+        <!--微信小程序Java SDK-->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-miniapp</artifactId>
+            <version>3.9.4.B</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

@@ -17,7 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class UserHello {
     @GetMapping(value = "/hello")
-    public String getHello(){
+    public String getHello() {
+        log.info("我被调用了");
+        return "Hello,this message is from user-center!";
+    }
+
+    @GetMapping(value = "/hello1")
+    public String getHello1() {
         log.info("我被调用了");
         return "Hello,this message is from user-center!";
     }
