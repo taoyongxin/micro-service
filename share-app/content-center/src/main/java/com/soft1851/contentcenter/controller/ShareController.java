@@ -1,13 +1,17 @@
 package com.soft1851.contentcenter.controller;
 
 import com.soft1851.contentcenter.domain.dto.ContributeDto;
+import com.soft1851.contentcenter.domain.dto.FindOneDto;
 import com.soft1851.contentcenter.domain.dto.ShareDto;
 import com.soft1851.contentcenter.domain.entity.Share;
 import com.soft1851.contentcenter.service.ShareService;
+import com.soft1851.contentcenter.util.JwtOperator;
+import io.jsonwebtoken.Claims;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -30,6 +34,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ShareController {
     private final ShareService shareService;
+    private final JwtOperator jwtOperator;
 
 //    @GetMapping(value = "/all")
 //    public ResponseResult getAll() {
@@ -64,10 +69,10 @@ public class ShareController {
 //        return new ResponseResult(200,"请求成功",shareDtoList);
 //    }
 
-    @GetMapping(value = "/{id}")
-    @ApiOperation(value = "查询指定id的分享详情",notes = "查询指定id的分享详情")
-    public ShareDto findById(@PathVariable Integer id) {
-        return this.shareService.findById(id);
+    @PostMapping(value = "/id")
+    @ApiOperation(value = "查询指定id的分享详情", notes = "查询指定id的分享详情")
+    public ShareDto findById(@RequestBody FindOneDto findOneDto) {
+        return this.shareService.findById(findOneDto.getId());
     }
 
 //    @GetMapping(value = "/all")
@@ -76,25 +81,36 @@ public class ShareController {
 //    }
 
     @GetMapping("/query")
-    @ApiOperation(value = "分享列表",notes = "分享列表")
+    @ApiOperation(value = "分享列表", notes = "分享列表")
     public List<Share> query(
             @RequestParam(required = false) String title,
             @RequestParam(required = false, defaultValue = "1") Integer pageNo,
             @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-            @RequestParam(required = false) Integer userId) throws Exception {
+            @RequestHeader(value = "X-Token", required = false) String token) {
         if (pageSize > 100) {
             pageSize = 100;
         }
-        return this.shareService.query(title,pageNo,pageSize,userId).getList();
+        Integer userId = null;
+        if (StringUtils.isNotBlank(token)) {
+            Claims claims = this.jwtOperator.getClaimsFromToken(token);
+            log.info(claims.toString());
+            System.out.println("*********" + claims.toString());
+            userId = (Integer) claims.get("id");
+        } else {
+            log.info("没有token");
+            System.out.println("未找到token");
+        }
+        return this.shareService.query(title, pageNo, pageSize, userId).getList();
     }
 
     @PostMapping(value = "/insert")
-    @ApiOperation(value = "投稿",notes = "用户投稿")
-    public int insertShare(@RequestBody ContributeDto contributeDto){
+    @ApiOperation(value = "投稿", notes = "用户投稿")
+    public int insertShare(@RequestBody ContributeDto contributeDto) {
         return this.shareService.insertShare(contributeDto);
     }
 
     private final AsyncRestTemplate asyncRestTemplate;
+
     @GetMapping(value = "/sayHelloAys")
     public String sayHelloAys() {
         //异步发送
@@ -102,7 +118,6 @@ public class ShareController {
         entity.addCallback(result -> log.info(result.getBody()), (e) -> log.error(e.getMessage()));
         return entity.toString();
     }
-
 
 
 }

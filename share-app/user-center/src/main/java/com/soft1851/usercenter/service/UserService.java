@@ -46,8 +46,9 @@ public interface UserService {
     /**
      * 用户登录
      * @param loginDto
+     * @param openId
      * @return
      */
-    User login(LoginDto loginDto);
+    User login(LoginDto loginDto,String openId);
 
 }

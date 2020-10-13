@@ -1,6 +1,7 @@
 package com.soft1851.contentcenter.service;
 
 import com.github.pagehelper.PageInfo;
+import com.soft1851.contentcenter.dao.ShareMapper;
 import com.soft1851.contentcenter.domain.dto.ContributeDto;
 import com.soft1851.contentcenter.domain.dto.ShareAuditDto;
 import com.soft1851.contentcenter.domain.dto.ShareDto;
@@ -19,10 +20,19 @@ class ShareServiceTest {
     @Resource
     private ShareService shareService;
 
+    @Resource
+    private ShareMapper shareMapper;
+
     @Test
     void findById() {
         ShareDto shareDto = shareService.findById(1);
         System.out.println(shareDto);
+    }
+
+    @Test
+    void findByOne() {
+        Share share = this.shareMapper.selectByPrimaryKey(1);
+        System.out.println(share);
     }
 
     @Test
@@ -64,5 +74,9 @@ class ShareServiceTest {
                 .reason("通过")
                 .build();
         shareService.auditByIdSyn(17,shareAuditDto);
+    }
+
+    @Test
+    void testFindById() {
     }
 }

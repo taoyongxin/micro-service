@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
  * @author Tao
  * @version 1.0
  * @ClassName LoginDto
- * @Description TODO
+ * @Description 用户登录时的传输对象（客户端->后台）
  * @date 2020-10-12 13:04
  **/
 @Data
@@ -17,7 +17,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class LoginDto {
-    private String wxId;
+    /**
+     * openId
+     */
+    private String openId;
+    /**
+     * loginCode
+     */
+    private String loginCode;
+    /**
+     * 微信昵称
+     */
     private String wxNickname;
+    /**
+     * 头像地址
+     */
     private String avatarUrl;
 }

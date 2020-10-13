@@ -12,7 +12,9 @@ com\soft1851\contentcenter\common\ResultCode.class
 com\soft1851\contentcenter\domain\dto\UserAddBonusMsgDto$UserAddBonusMsgDtoBuilder.class
 com\soft1851\contentcenter\domain\dto\UserDto.class
 com\soft1851\contentcenter\domain\entity\Course.class
+com\soft1851\contentcenter\auth\CheckLogin.class
 com\soft1851\contentcenter\domain\entity\Share.class
+com\soft1851\contentcenter\feignclient\TokenInterceptor.class
 com\soft1851\contentcenter\service\NoticeService.class
 com\soft1851\contentcenter\domain\dto\ContributeDto.class
 com\soft1851\contentcenter\domain\dto\ShareDto.class
@@ -30,6 +32,8 @@ com\soft1851\contentcenter\domain\entity\MidUserShare.class
 com\soft1851\contentcenter\service\impl\ShareServiceImpl.class
 com\soft1851\contentcenter\service\impl\NoticeServiceImpl.class
 com\soft1851\contentcenter\domain\dto\ShareAuditDto$ShareAuditDtoBuilder.class
+com\soft1851\contentcenter\domain\dto\FindOneDto$FindOneDtoBuilder.class
+com\soft1851\contentcenter\domain\dto\FindOneDto.class
 com\soft1851\contentcenter\domain\entity\Share$ShareBuilder.class
 com\soft1851\contentcenter\TestController.class
 com\soft1851\contentcenter\domain\enums\AuditStatusEnum.class
@@ -38,12 +42,15 @@ com\soft1851\contentcenter\dao\CourseMapper.class
 com\soft1851\contentcenter\domain\dto\CourseDto.class
 com\soft1851\contentcenter\controller\ShareController.class
 com\soft1851\contentcenter\domain\dto\CourseDto$CourseDtoBuilder.class
+com\soft1851\contentcenter\auth\AuthAspect.class
 com\soft1851\contentcenter\dao\NoticeMapper.class
 com\soft1851\contentcenter\controller\ContentHello.class
 com\soft1851\contentcenter\domain\entity\MidUserShare$MidUserShareBuilder.class
+com\soft1851\contentcenter\auth\CheckAuthorization.class
 com\soft1851\contentcenter\configuration\GlobalFeignConfiguration.class
 com\soft1851\contentcenter\TestService.class
 com\soft1851\contentcenter\domain\entity\Notice$NoticeBuilder.class
 com\soft1851\contentcenter\common\ResponseResult.class
 com\soft1851\contentcenter\controller\CourseController.class
 com\soft1851\contentcenter\configuration\SwaggerConfiguration.class
+com\soft1851\contentcenter\util\JwtOperator.class

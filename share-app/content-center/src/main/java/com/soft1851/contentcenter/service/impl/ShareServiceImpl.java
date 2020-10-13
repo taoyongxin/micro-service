@@ -46,6 +46,7 @@ public class ShareServiceImpl implements ShareService {
     public ShareDto findById(Integer id) {
         // 获取分享实体
         Share share = this.shareMapper.selectByPrimaryKey(id);
+        System.out.println("***********"+share);
         // 获得发布人id
         Integer userId = share.getUserId();
 
@@ -56,6 +57,7 @@ public class ShareServiceImpl implements ShareService {
         UserDto userDTO = this.userCenterFeignClient.findUserById(userId);
 
         ShareDto shareDTO = new ShareDto();
+        shareDTO.setShare(share);
         // 属性的装配
         BeanUtils.copyProperties(share, shareDTO);
         shareDTO.setWxNickname(userDTO.getWxNickname());
