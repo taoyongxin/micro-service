@@ -1,8 +1,7 @@
 package com.soft1851.contentcenter.controller;
 
-import com.soft1851.contentcenter.domain.dto.ContributeDto;
-import com.soft1851.contentcenter.domain.dto.FindOneDto;
-import com.soft1851.contentcenter.domain.dto.ShareDto;
+import com.soft1851.contentcenter.auth.CheckLogin;
+import com.soft1851.contentcenter.domain.dto.*;
 import com.soft1851.contentcenter.domain.entity.Share;
 import com.soft1851.contentcenter.service.ShareService;
 import com.soft1851.contentcenter.util.JwtOperator;
@@ -91,6 +90,29 @@ public class ShareController {
             pageSize = 100;
         }
         Integer userId = null;
+        if (!"no-token".equals(token)) {
+            Claims claims = this.jwtOperator.getClaimsFromToken(token);
+            log.info(claims.toString());
+            System.out.println("*********" + claims.toString());
+            userId = (Integer) claims.get("id");
+        } else {
+            log.info("没有token");
+            System.out.println("未找到token");
+        }
+        System.out.println("******获得用户id：" + userId + "*************");
+        return this.shareService.query(title, pageNo, pageSize, userId).getList();
+    }
+
+    @GetMapping("/conversion")
+    @ApiOperation(value = "我的兑换列表", notes = "我的兑换列表")
+    public List<ConversionDto> getAllConversion(
+            @RequestParam(required = false, defaultValue = "1") Integer pageNo,
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+            @RequestHeader(value = "X-Token", required = false) String token) {
+        if (pageSize > 100) {
+            pageSize = 100;
+        }
+        Integer userId = null;
         if (StringUtils.isNotBlank(token)) {
             Claims claims = this.jwtOperator.getClaimsFromToken(token);
             log.info(claims.toString());
@@ -100,7 +122,7 @@ public class ShareController {
             log.info("没有token");
             System.out.println("未找到token");
         }
-        return this.shareService.query(title, pageNo, pageSize, userId).getList();
+        return this.shareService.getAllConversion(pageNo, pageSize, userId).getList();
     }
 
     @PostMapping(value = "/insert")
@@ -119,5 +141,11 @@ public class ShareController {
         return entity.toString();
     }
 
-
+    @ApiOperation(value = "兑换分享", notes = "兑换分享")
+    @PostMapping("/exchange")
+    @CheckLogin
+    public Share exchange(@RequestBody ExchangeDTO exchangeDTO) {
+        System.out.println(exchangeDTO + ">>>>>>>>>>>>");
+        return this.shareService.exchange(exchangeDTO);
+    }
 }

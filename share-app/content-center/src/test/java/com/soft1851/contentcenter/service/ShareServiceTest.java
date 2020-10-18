@@ -3,6 +3,7 @@ package com.soft1851.contentcenter.service;
 import com.github.pagehelper.PageInfo;
 import com.soft1851.contentcenter.dao.ShareMapper;
 import com.soft1851.contentcenter.domain.dto.ContributeDto;
+import com.soft1851.contentcenter.domain.dto.ConversionDto;
 import com.soft1851.contentcenter.domain.dto.ShareAuditDto;
 import com.soft1851.contentcenter.domain.dto.ShareDto;
 import com.soft1851.contentcenter.domain.entity.Share;
@@ -77,6 +78,15 @@ class ShareServiceTest {
     }
 
     @Test
+    void getAllConversion() {
+        PageInfo<ConversionDto> query = shareService.getAllConversion(1,3,1);
+        List<ConversionDto> list = query.getList();
+        list.forEach(item-> System.out.println(item.getTitle()+","+item.getDownloadUrl()));
+    }
+
+    @Test
     void testFindById() {
+        ShareDto shareDto = shareService.findById(3);
+        System.out.println(shareDto);
     }
 }

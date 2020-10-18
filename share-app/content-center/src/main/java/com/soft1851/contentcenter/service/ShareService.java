@@ -1,9 +1,7 @@
 package com.soft1851.contentcenter.service;
 
 import com.github.pagehelper.PageInfo;
-import com.soft1851.contentcenter.domain.dto.ContributeDto;
-import com.soft1851.contentcenter.domain.dto.ShareAuditDto;
-import com.soft1851.contentcenter.domain.dto.ShareDto;
+import com.soft1851.contentcenter.domain.dto.*;
 import com.soft1851.contentcenter.domain.entity.Share;
 
 /**
@@ -24,6 +22,8 @@ public interface ShareService {
      * @return
      */
     ShareDto findById(Integer id);
+
+
 
     /**
      * 根据标题模糊查询某个用户的分享列表数据，title为空则为所有数据，查询结果分页
@@ -61,5 +61,20 @@ public interface ShareService {
      */
     Share auditByIdSyn(Integer id,ShareAuditDto shareAuditDto);
 
+    /**
+     * 查看用户兑换页详情
+     * @param pageNo
+     * @param pageSize
+     * @param userId
+     * @return
+     */
+    PageInfo<ConversionDto> getAllConversion(Integer pageNo, Integer pageSize,Integer userId);
 
+    /**
+     * 积分兑换资源
+     *
+     * @param exchangeDTO
+     * @return Share
+     */
+    Share exchange(ExchangeDTO exchangeDTO);
 }

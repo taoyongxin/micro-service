@@ -27,4 +27,14 @@ class UserServiceTest {
         System.out.println(userService.addBonusToUser(userAddBonusMsgDto));
     }
 
+    @Test
+    void addBonus() {
+        UserAddBonusMsgDto userAddBonusMsgDto = UserAddBonusMsgDto.builder()
+                .userId(3)
+                .bonus(50)
+                .description("测试增加50分")
+                .event("+50")
+                .build();
+        userService.addBonus(userAddBonusMsgDto);
+    }
 }

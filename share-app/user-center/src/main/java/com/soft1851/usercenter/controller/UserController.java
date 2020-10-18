@@ -53,11 +53,33 @@ public class UserController {
         return this.userService.addBonusToUser(userAddBonusMsgDto);
     }
 
+    /**
+     * 增减积分接口
+     *
+     * @param userAddBonusDto
+     * @return
+     */
+    @PutMapping(value = "/add-bonus")
+    public User addBonus(@RequestBody UserAddBonusDto userAddBonusDto) {
+        log.info("增减积分接口被请求了...");
+        Integer userId = userAddBonusDto.getUserId();
+        userService.addBonus(
+                UserAddBonusMsgDto.builder()
+                        .userId(userId)
+                        .bonus(userAddBonusDto.getBonus())
+                        .description("兑换分享...")
+                        .event("BUY")
+                        .build()
+        );
+        return this.userService.findById(userId);
+    }
+
+
     @PostMapping(value = "/login")
-    public LoginRespDto login(@RequestBody LoginDto loginDto) throws WxErrorException {
+    public LoginResDto login(@RequestBody LoginDto loginDto) throws WxErrorException {
         String openId;
         // 微信小程序登录，需要根据code请求openId
-        if (loginDto.getLoginCode() != null) {
+        if (loginDto.getOpenId() == null) {
             // 微信服务端校验是否已经登录的结果
             WxMaJscode2SessionResult result = this.wxMaService.getUserService()
                     .getSessionInfo(loginDto.getLoginCode());
@@ -82,22 +104,31 @@ public class UserController {
                 token,
                 jwtOperator.getExpirationTime());
 
-        return LoginRespDto.builder()
+        ResponseDTO responseDTO = this.userService.checkIsSign(UserSignInDTO.builder().userId(user.getId()).build());
+        int isUserSignin = 0;
+        if (responseDTO.getCode()=="200"){
+            isUserSignin = 0;
+        }else {
+            isUserSignin = 1;
+        }
+
+        return LoginResDto.builder()
                 .user(
                         UserRespDto.builder()
-                        .id(user.getId())
-                        .wxNickname(user.getWxNickname())
-                        .avatarUrl(user.getAvatarUrl())
-                        .bonus(user.getBonus())
-                        .build())
+                                .id(user.getId())
+                                .avatarUrl(user.getAvatarUrl())
+                                .bonus(user.getBonus())
+                                .wxNickname(user.getWxNickname())
+                                .build())
                 .token(JwtTokenRespDto.builder()
                         .token(token)
                         .expirationTime(jwtOperator.getExpirationTime().getTime())
                         .build())
+                .isUserSignin(isUserSignin)
                 .build();
     }
 
-//    @PostMapping(value = "/wxLogin")
+    //    @PostMapping(value = "/wxLogin")
 //    public LoginResDto codeAuth(@RequestBody WxLoginDto wxLoginDto) throws WxErrorException{
 //        //通过第三方SDK获得openId
 //        WxMaJscode2SessionResult result = this.wxMaService.getUserService()
@@ -116,5 +147,14 @@ public class UserController {
 //                .build();
 //    }
 
+    /**
+     * 用户签到
+     * @param userSignInDTO
+     * @return
+     */
+    @PostMapping(value = "/signin")
+    public ResponseDTO signIn(@RequestBody UserSignInDTO userSignInDTO) {
+        return userService.signIn(userSignInDTO);
+    }
 
 }

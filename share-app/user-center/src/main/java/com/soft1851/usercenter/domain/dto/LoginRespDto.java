@@ -26,4 +26,8 @@ public class LoginRespDto {
      * token数据
      */
     private JwtTokenRespDto token;
+    /**
+     * 用户当天是否签到
+     */
+    private Integer inUserSignin;
 }

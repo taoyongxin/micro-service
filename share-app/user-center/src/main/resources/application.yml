@@ -3,6 +3,13 @@ server:
 spring:
   application:
     name: user-center
+  zipkin:
+    base-url: http://localhost:9411/
+    discoveryClientEnabled: false
+  sleuth:
+    sampler:
+      # 抽样率，默认是0.1（10%）
+      probability: 1.0
   datasource:
     #    url: jdbc:mysql://123.56.164.214:3306/user_center
     url: jdbc:mysql://47.96.8.29:3306/user_center

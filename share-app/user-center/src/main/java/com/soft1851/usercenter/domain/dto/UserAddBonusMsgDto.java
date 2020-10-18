@@ -18,11 +18,21 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserAddBonusMsgDto {
     /**
-     * 用户id
+     * 为谁加积分
      */
     private Integer userId;
     /**
-     * 增加积分
+     * 加多少积分
      */
     private Integer bonus;
+
+    /**
+     * 描述
+     */
+    private String description;
+
+    /**
+     * 事件
+     */
+    private String event;
 }

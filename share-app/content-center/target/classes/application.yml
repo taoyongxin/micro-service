@@ -3,6 +3,13 @@ server:
 spring:
   application:
     name: content-center
+  zipkin:
+    base-url: http://localhost:9411/
+    discoveryClientEnabled: false
+  sleuth:
+    sampler:
+        # 抽样率，默认是0.1（10%）
+      probability: 1.0
   main:
     allow-bean-definition-overriding: true
   datasource:
@@ -20,8 +27,8 @@ spring:
     nacos:
       discovery:
         # 指定nacos server的地址
-#        server-addr: localhost:8848
-        server-addr: 123.56.164.214:8848
+        server-addr: localhost:8848
+#        server-addr: 123.56.164.214:8848
 
         # 指定名称空间地址
 #        namespace: f0353fde-6d84-405c-a435-392c99fb9254

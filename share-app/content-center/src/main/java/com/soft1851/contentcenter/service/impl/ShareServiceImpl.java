@@ -1,5 +1,7 @@
 package com.soft1851.contentcenter.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.soft1851.contentcenter.dao.MidUserShareMapper;
@@ -13,7 +15,6 @@ import com.soft1851.contentcenter.service.ShareService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -21,6 +22,7 @@ import tk.mybatis.mapper.util.StringUtil;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -46,7 +48,7 @@ public class ShareServiceImpl implements ShareService {
     public ShareDto findById(Integer id) {
         // 获取分享实体
         Share share = this.shareMapper.selectByPrimaryKey(id);
-        System.out.println("***********"+share);
+        System.out.println("***********" + share);
         // 获得发布人id
         Integer userId = share.getUserId();
 
@@ -54,15 +56,19 @@ public class ShareServiceImpl implements ShareService {
         // 2. 复杂的url难以维护：https://user-center/s?ie={ie}&f={f}&rsv_bp=1&rsv_idx=1&tn=baidu&wd=a&rsv_pq=c86459bd002cfbaa&rsv_t=edb19hb%2BvO%2BTySu8dtmbl%2F9dCK%2FIgdyUX%2BxuFYuE0G08aHH5FkeP3n3BXxw&rqlang=cn&rsv_enter=1&rsv_sug3=1&rsv_sug2=0&inputT=611&rsv_sug4=611
         // 3. 难以相应需求的变化，变化很没有幸福感
         // 4. 编程体验不统一
-        UserDto userDTO = this.userCenterFeignClient.findUserById(userId);
+//        ResponseDTO responseDTO = this.userCenterFeignClient.findUserById(userId);
+//        UserDto userDTO = convert(responseDTO);
+//        System.out.println(userDTO);
+        UserDto userDto = this.userCenterFeignClient.findUserById(userId);
 
         ShareDto shareDTO = new ShareDto();
         shareDTO.setShare(share);
         // 属性的装配
-        BeanUtils.copyProperties(share, shareDTO);
-        shareDTO.setWxNickname(userDTO.getWxNickname());
+//        BeanUtils.copyProperties(share, shareDTO);
+        shareDTO.setWxNickname(userDto.getWxNickname());
         return shareDTO;
     }
+
 
     @Override
     public PageInfo<Share> query(String title, Integer pageNo, Integer pageSize, Integer userId) {
@@ -129,9 +135,6 @@ public class ShareServiceImpl implements ShareService {
     }
 
 
-
-
-
     private final RocketMQTemplate rocketMQTemplate;
 
     @Override
@@ -155,7 +158,7 @@ public class ShareServiceImpl implements ShareService {
         if (AuditStatusEnum.PASS.equals(shareAuditDto.getAuditStatusEnum())) {
             this.rocketMQTemplate.convertAndSend(
                     "add-bonus",
-                    UserAddBonusMsgDto.builder()
+                    UserAddBonusDto.builder()
                             .userId(share.getUserId())
                             .bonus(50)
                             .build());
@@ -179,13 +182,110 @@ public class ShareServiceImpl implements ShareService {
         this.shareMapper.updateByPrimaryKey(share);
 
         // 3.如果是PASS  改用同步的方法给用户增加积分
-        UserAddBonusMsgDto userAddBonusMsgDto = UserAddBonusMsgDto.builder()
+        UserAddBonusDto userAddBonusDto = UserAddBonusDto.builder()
                 .userId(share.getUserId())
                 .bonus(50)
                 .build();
-        this.userCenterFeignClient.addBonusToUser(userAddBonusMsgDto);
+        this.userCenterFeignClient.addBonusToUser(userAddBonusDto);
         return share;
     }
 
+    @Override
+    public PageInfo<ConversionDto> getAllConversion(Integer pageNo, Integer pageSize, Integer userId) {
+        // 启动分页
+        PageHelper.startPage(pageNo, pageSize);
+        // 构造查询实例
+        Example example = new Example(MidUserShare.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId", userId);
+        List<MidUserShare> midUserShares = this.midUserShareMapper.selectByExample(example);
+        List<ConversionDto> conversionDtos = new ArrayList<ConversionDto>();
+        for (int i = 0;i<midUserShares.size();i++){
+            Share share = this.shareMapper.selectByPrimaryKey(midUserShares.get(i).getShareId());
+            ConversionDto conversionDto = ConversionDto.builder()
+                    .id(midUserShares.get(i).getShareId())
+                    .title(share.getTitle())
+                    .isOriginal(share.getIsOriginal())
+                    .author(share.getAuthor())
+                    .cover(share.getCover())
+                    .summary(share.getSummary())
+                    .price(share.getPrice())
+                    .downloadUrl(share.getDownloadUrl())
+                    .build();
+                conversionDtos.add(conversionDto);
+        }
+
+        return new PageInfo<>(conversionDtos);
+    }
+
+    /**
+     * 兑换
+     * @param exchangeDTO
+     * @return
+     */
+    @Override
+    public Share exchange(ExchangeDTO exchangeDTO) {
+        int userId = exchangeDTO.getUserId();
+        int shareId = exchangeDTO.getShareId();
+        // 1. 根据id查询share，校验是否存在
+        Share share = this.shareMapper.selectByPrimaryKey(shareId);
+        if (share == null) {
+            throw new IllegalArgumentException("该分享不存在！");
+        }
+        Integer price = share.getPrice();
+
+        // 2. 如果当前用户已经兑换过该分享，则直接返回
+        MidUserShare midUserShare = this.midUserShareMapper.selectOne(
+                MidUserShare.builder()
+                        .shareId(shareId)
+                        .userId(userId)
+                        .build()
+        );
+        if (midUserShare != null) {
+            return share;
+        }
+
+        // 3. 根据当前登录的用户id，查询积分是否够
+
+        UserDto userDto = this.userCenterFeignClient.findUserById(userId);
+//        System.out.println(price+"*******"+userDto.getBonus());
+        if (price > userDto.getBonus()) {
+            throw new IllegalArgumentException("用户积分不够！");
+        }
+
+
+        // 4. 扣积分
+        this.userCenterFeignClient.addBonusToUser(
+                UserAddBonusDto.builder()
+                        .userId(userId)
+                        .bonus(price * -1)
+                        .build()
+        );
+        //5. 向mid_user_share表里插入一条数据
+        this.midUserShareMapper.insert(
+                MidUserShare.builder()
+                        .userId(userId)
+                        .shareId(shareId)
+                        .build()
+        );
+        return share;
+    }
+
+    /**
+     * 将统一的返回响应结果转换为UserDTO类型
+     * @param responseDTO
+     * @return
+     */
+    private UserDto convert(ResponseDTO responseDTO) {
+        ObjectMapper mapper = new ObjectMapper();
+        UserDto userDto = null;
+        try {
+            String json = mapper.writeValueAsString(responseDTO.getData());
+            userDto = mapper.readValue(json, UserDto.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return userDto;
+    }
 
 }

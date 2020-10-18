@@ -1,6 +1,5 @@
 package com.soft1851.usercenter.domain.dto;
 
-import com.soft1851.usercenter.domain.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class LoginResDto {
-    private User user;
-    private String token;
+    private UserRespDto user;
+    private JwtTokenRespDto token;
+    private Integer isUserSignin;
 }

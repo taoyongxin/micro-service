@@ -1,4 +1,5 @@
 com\soft1851\contentcenter\service\ShareServiceTest.class
+com\soft1851\contentcenter\dao\MidUserShareMapperTest.class
 com\soft1851\contentcenter\dao\NoticeMapperTest.class
 com\soft1851\contentcenter\dao\CourseMapperTest.class
 com\soft1851\contentcenter\dao\ShareMapperTest.class
